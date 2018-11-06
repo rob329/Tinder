@@ -54,10 +54,22 @@ class SwipeController: UIViewController {
                     UIView.animate(withDuration: 0.3, animations: {
                          card.center = CGPoint(x: card.center.x - 200, y: card.center.y)
                          card.alpha = 0
-                        if(card.center.x > 190){
-                            //self.wholeView.sendSubview(toBack: self.card)
-                        }
-                    })
+                    }){(finished: Bool) -> Void in UIView.animate(withDuration: 0.3, animations: { () -> Void in
+                            if(card == self.card){
+                                self.wholeView.sendSubview(toBack: self.card)
+                                self.wholeView.sendSubview(toBack: self.card)
+                                self.card.center = self.view.center
+                                self.card.alpha = 1
+                                self.card.transform = CGAffineTransform.identity
+
+                            }
+                            else{
+                                self.wholeView.sendSubview(toBack: self.backCard)
+                                self.backCard.center = self.view.center
+                                self.backCard.alpha = 1
+                                self.backCard.transform = CGAffineTransform.identity
+                            }
+                    })}
                     return
                 }
                 else if card.center.x > (self.view.frame.width - 75){
@@ -66,52 +78,39 @@ class SwipeController: UIViewController {
                         card.center = CGPoint(x: card.center.x + 200, y: card.center.y)
                         card.alpha = 0
                         
-                        
                     })
-                    
+                    {(finished: Bool) -> Void in UIView.animate(withDuration: 0.3, animations: { () -> Void in
+                        if(card == self.card){
+                            self.wholeView.sendSubview(toBack: self.card)
+                            self.card.center = self.view.center
+                            self.card.alpha = 1
+                            self.card.transform = CGAffineTransform.identity
+                        }
+                        else{
+                            self.wholeView.sendSubview(toBack: self.backCard)
+                            self.backCard.center = self.view.center
+                            self.backCard.alpha = 1
+                            self.backCard.transform = CGAffineTransform.identity
+                        }
+                    })}
                     return
                 }
-                self.resetCard(sender :sender.view!)
+                self.resetCard(sender: sender.view!)
             })
         }
      }
     
-    @IBAction func reset(_ sender: UIButton) {
-        //resetCard(sender: self.card)
-    }
-    
-    @objc func resetAfterSwipe(){
-        UIView.animate(withDuration: 0.7, animations: {
-            self.card.center = self.view.center
-            self.card.alpha = 1
-            self.card.transform = CGAffineTransform.identity
-        })
-        if (!inBack){
-            
-        }
-        else{
-            
-        }
-    }
     
     func resetCard(sender: UIView){
-        if(inBack){
-            self.wholeView.sendSubview(toBack: self.card)
-            UIView.animate(withDuration: 0.3, animations: {
-                self.backCard.center = self.view.center
-                self.backCard.alpha = 1
-                self.backCard.transform = CGAffineTransform.identity
-            })
-        }
-        else{
-            UIView.animate(withDuration: 0.3, animations: {
-                self.card.center = self.view.center
-                self.card.alpha = 1
-                self.card.transform = CGAffineTransform.identity
-            })
-        }
+        UIView.animate(withDuration: 0.3, animations: {
+            sender.center = self.view.center
+            sender.alpha = 1
+            sender.transform = CGAffineTransform.identity
+        })
+        
         
     }
+    
     
     
 
